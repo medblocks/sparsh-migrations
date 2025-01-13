@@ -1,0 +1,12 @@
+[project]
+name = "sparsh-migrations"
+version = "0.1.0"
+description = ""
+readme = "Readme.md"
+requires-python = ">=3.8.1 <3.13"
+dependencies = [
+    "dlt[sqlalchemy] (>=1.5.0,<2.0.0)"
+]
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
