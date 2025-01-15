@@ -1,11 +1,23 @@
 gateways:
-  local:
+  postgres:
     connection:
-      type: duckdb
-      database: db.db
+      type: postgres
+      host: postgres.postgres
+      port: 5432
+      user: postgres
+      password: 44569491a9d43226b06f
+      database: postgres
 
-default_gateway: local
+  mysql:
+    connection:
+      type: mysql
+      host: 10.0.40.105
+      port: 3306
+      user: read_only
+      password: 4NjneaNJLNewew
+
+default_gateway: postgres
 
 model_defaults:
-  dialect: mysql
+  dialect: postgres
   start: 2025-01-14
