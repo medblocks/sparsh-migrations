@@ -6,7 +6,7 @@ gateways:
       port: 5432
       user: postgres
       password: 44569491a9d43226b06f
-      database: postgres
+      database: medha
 
   mysql:
     connection:
