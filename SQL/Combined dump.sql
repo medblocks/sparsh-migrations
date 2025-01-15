@@ -7,7 +7,7 @@ CREATE TABLE Unit (
     hospital_id VARCHAR(50)
 );
 
--- Consultant table
+-- Consultant table,)
 CREATE TABLE Consultant (
     consultant_id VARCHAR(50) PRIMARY KEY,
     consultant_key VARCHAR(50) UNIQUE,
@@ -22,8 +22,7 @@ CREATE TABLE Department (
     department_key VARCHAR(50) UNIQUE,
     name VARCHAR(100),
     unit_id VARCHAR(50),
-    status VARCHAR(20) DEFAULT 'Active',
-    FOREIGN KEY (unit_id) REFERENCES Unit(unit_id)
+    status VARCHAR(20) DEFAULT 'Active'
 );
 
 -- Plan table
@@ -46,8 +45,7 @@ CREATE TABLE Service_Center (
     service_center_id VARCHAR(50) PRIMARY KEY,
     name VARCHAR(100),
     unit_id VARCHAR(50),
-    status VARCHAR(20) DEFAULT 'Active',
-    FOREIGN KEY (unit_id) REFERENCES Unit(unit_id)
+    status VARCHAR(20) DEFAULT 'Active'
 );
 
 -- Patient table
@@ -76,8 +74,7 @@ CREATE TABLE Encounter (
     ip_no VARCHAR(50),
     visit_type_id VARCHAR(50),
     visit_no VARCHAR(50),
-    status VARCHAR(20) DEFAULT 'Active',
-    FOREIGN KEY (patient_id) REFERENCES Patient(patient_id)
+    status VARCHAR(20) DEFAULT 'Active'
 );
 
 -- Bed table
@@ -88,8 +85,7 @@ CREATE TABLE Bed (
     current_bed_no VARCHAR(50),
     current_bed_key VARCHAR(50),
     unit_id VARCHAR(50),
-    status VARCHAR(20) DEFAULT 'Available',
-    FOREIGN KEY (unit_id) REFERENCES Unit(unit_id)
+    status VARCHAR(20) DEFAULT 'Available'
 );
 
 -- Admission table
@@ -103,11 +99,7 @@ CREATE TABLE Admission (
     patient_id VARCHAR(50),
     consultant_id VARCHAR(50),
     department_id VARCHAR(50),
-    bed_id VARCHAR(50),
-    FOREIGN KEY (patient_id) REFERENCES Patient(patient_id),
-    FOREIGN KEY (consultant_id) REFERENCES Consultant(consultant_id),
-    FOREIGN KEY (department_id) REFERENCES Department(department_id),
-    FOREIGN KEY (bed_id) REFERENCES Bed(bed_id)
+    bed_id VARCHAR(50)
 );
 
 -- Discharge table
@@ -120,10 +112,7 @@ CREATE TABLE Discharge (
     discharge_status VARCHAR(50),
     los INT,
     consultant_id VARCHAR(50),
-    department_id VARCHAR(50),
-    FOREIGN KEY (admission_id) REFERENCES Admission(admission_id),
-    FOREIGN KEY (consultant_id) REFERENCES Consultant(consultant_id),
-    FOREIGN KEY (department_id) REFERENCES Department(department_id)
+    department_id VARCHAR(50)
 );
 
 -- EMR table
@@ -156,8 +145,7 @@ CREATE TABLE EMR (
     socialhistoryrecord TEXT,
     fall_score DECIMAL(5,2),
     created_datetime DATE,
-    modified_datetime DATE,
-    FOREIGN KEY (visit_id) REFERENCES Encounter(visit_id)
+    modified_datetime DATE
 );
 
 -- Estimate table
@@ -166,8 +154,7 @@ CREATE TABLE Estimate (
     estimate_type VARCHAR(50),
     total_estimated_amount DECIMAL(12,2),
     estimated_los INT,
-    patient_id VARCHAR(50),
-    FOREIGN KEY (patient_id) REFERENCES Patient(patient_id)
+    patient_id VARCHAR(50)
 );
 
 -- Service table
@@ -189,8 +176,7 @@ CREATE TABLE Store (
     store_id VARCHAR(50) PRIMARY KEY,
     unit_id VARCHAR(50),
     name VARCHAR(100),
-    status VARCHAR(20) DEFAULT 'Active',
-    FOREIGN KEY (unit_id) REFERENCES Unit(unit_id)
+    status VARCHAR(20) DEFAULT 'Active'
 );
 
 -- Inventory table
@@ -200,9 +186,7 @@ CREATE TABLE Inventory (
     item_stock_qty INT,
     item_stock_value DECIMAL(12,2),
     item_id VARCHAR(50),
-    store_id VARCHAR(50),
-    FOREIGN KEY (item_id) REFERENCES Item(item_id),
-    FOREIGN KEY (store_id) REFERENCES Store(store_id)
+    store_id VARCHAR(50)
 );
 
 -- Consumption table
@@ -215,9 +199,7 @@ CREATE TABLE Consumption (
     issue_qty INT,
     issue_value DECIMAL(12,2),
     item_id VARCHAR(50),
-    store_id VARCHAR(50),
-    FOREIGN KEY (item_id) REFERENCES Item(item_id),
-    FOREIGN KEY (store_id) REFERENCES Store(store_id)
+    store_id VARCHAR(50)
 );
 
 -- Transfer table
@@ -231,10 +213,7 @@ CREATE TABLE Transfer (
     receipt_value DECIMAL(12,2),
     item_id VARCHAR(50),
     source_store_id VARCHAR(50),
-    destination_store_id VARCHAR(50),
-    FOREIGN KEY (item_id) REFERENCES Item(item_id),
-    FOREIGN KEY (source_store_id) REFERENCES Store(store_id),
-    FOREIGN KEY (destination_store_id) REFERENCES Store(store_id)
+    destination_store_id VARCHAR(50)
 );
 
 
@@ -266,10 +245,7 @@ CREATE TABLE Purchase (
     grn_number VARCHAR(50),
     item_id VARCHAR(50),
     vendor_id VARCHAR(50),
-    store_id VARCHAR(50),
-    FOREIGN KEY (item_id) REFERENCES Item(item_id),
-    FOREIGN KEY (vendor_id) REFERENCES Vendor(vendor_id),
-    FOREIGN KEY (store_id) REFERENCES Store(store_id)
+    store_id VARCHAR(50)
 );
 
 -- Revenue table
@@ -279,8 +255,7 @@ CREATE TABLE Revenue (
     net_revenue DECIMAL(12,2),
     patient_payable DECIMAL(12,2),
     sponsor_payable DECIMAL(12,2),
-    encounter_id VARCHAR(50),
-    FOREIGN KEY (encounter_id) REFERENCES Encounter(visit_id)
+    encounter_id VARCHAR(50)
 );
 
 -- Invoice table
@@ -290,8 +265,7 @@ CREATE TABLE Invoice (
     invoice_approved_date DATE,
     invoice_approved_hour TIME,
     invoice_status VARCHAR(50),
-    revenue_id VARCHAR(50),
-    FOREIGN KEY (revenue_id) REFERENCES Revenue(revenue_id)
+    revenue_id VARCHAR(50)
 );
 
 -- Consultation table
@@ -301,9 +275,7 @@ CREATE TABLE Consultation (
     appointment_id VARCHAR(50),
     consultation_status VARCHAR(50),
     patient_id VARCHAR(50),
-    consultant_id VARCHAR(50),
-    FOREIGN KEY (patient_id) REFERENCES Patient(patient_id),
-    FOREIGN KEY (consultant_id) REFERENCES Consultant(consultant_id)
+    consultant_id VARCHAR(50)
 );
 
 -- Create indexes for frequently accessed columns
