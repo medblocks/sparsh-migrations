@@ -1,8 +1,4 @@
 gateways:
-  local:
-    connection:
-      type: duckdb
-      database: db.db
   postgres:
     connection:
       type: postgres
@@ -19,8 +15,8 @@ gateways:
       user: read_only
       password: 4NjneaNJLNewew
 
-default_gateway: local
+default_gateway: postgres
 
 model_defaults:
-  dialect: mysql
+  dialect: postgres
   start: 2025-01-16
