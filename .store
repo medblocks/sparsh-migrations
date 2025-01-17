@@ -1,0 +1,9 @@
+[sources.sql_database.credentials]
+
+connection_string = "mysql://read_only:4NjneaNJLNewew@13.200.36.86:3306/Base_DB"
+
+
+
+[destination.postgres.credentials]
+
+connection_string = "postgres://postgres:44569491a9d43226b06f@13.200.177.83:31565/medha?connect_timeout=15"

@@ -1,2 +1,3 @@
-dlt===1.5.0
+dlt[postgres,sql_database,mysql]===1.5.0
 streamlit
+SQLAlchemy===2.0.37

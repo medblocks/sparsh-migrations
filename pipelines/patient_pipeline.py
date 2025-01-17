@@ -47,12 +47,13 @@ def main():
     )
 
     load_info = pipeline.run(
-        patient_resource(),
+        patient_resource,
         table_name="patient",
         write_disposition="merge"
     )
+    print(dlt.secrets.value)
 
-    print(f"Load info: {load_info}")
+    # print(f"Load info: {load_info}")
 
 
 if __name__ == "__main__":
