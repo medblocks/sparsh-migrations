@@ -7,3 +7,21 @@ connection_string = "mysql://read_only:4NjneaNJLNewew@13.200.36.86:3306/Base_DB"
 [destination.postgres.credentials]
 
 connection_string = "postgres://postgres:44569491a9d43226b06f@13.200.177.83:31565/medha?connect_timeout=15"
+
+
+[patient_pipeline.sources.sql_database.credentials]
+drivername="mysql"
+username="read_only"
+password="4NjneaNJLNewew"
+database="Base_DB"
+host="13.200.36.86"
+port=3306
+
+
+[patient_pipeline.destination.postgres.credentials]
+drivername="psql"
+username="postgres"
+password="44569491a9d43226b06f"
+database="medha"
+host="13.200.177.83"
+port=31565

@@ -1,0 +1,26 @@
+gateways:
+  local:
+    connection:
+      type: duckdb
+      database: db.db
+  postgres:
+    connection:
+      type: postgres
+      host: 13.200.177.83
+      port: 31565
+      user: postgres
+      password: 44569491a9d43226b06f
+      database: medha
+  mysql:
+    connection:
+      type: mysql
+      host: 13.200.36.86
+      port: 3306
+      user: read_only
+      password: 4NjneaNJLNewew
+
+default_gateway: local
+
+model_defaults:
+  dialect: mysql
+  start: 2025-01-16
