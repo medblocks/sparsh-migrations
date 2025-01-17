@@ -1,0 +1,8 @@
+# put your configuration values here
+
+[runtime]
+log_level="WARNING"
+dlthub_telemetry = true
+
+[sources.sql_database]
+table = "table"

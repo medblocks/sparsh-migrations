@@ -1,1 +1,1 @@
-sqlmesh[web,postgres,mysql]===0.145.0
+dlt===1.5.0
