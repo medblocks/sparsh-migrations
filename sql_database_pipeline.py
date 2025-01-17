@@ -1,11 +1,18 @@
 from dlt.sources.credentials import ConnectionStringCredentials
 from dlt.sources.sql_database import sql_database, sql_table, Table
 import dlt
+from dlt.sources.credentials import ConnectionStringCredentials
+
+mysql_credentials = ConnectionStringCredentials(
+    connection_string="mysql://read_only:4NjneaNJLNewew@13.200.36.86:3306/Base_DB")
+postgres_credentials = ConnectionStringCredentials(
+    connection_string="postgres://postgres:44569491a9d43226b06f@13.200.177.83:31565/medha?connect_timeout=15")
 
 
 @dlt.resource(
     primary_key="patient_id",
-    write_disposition="merge"
+    write_disposition="merge",
+    merge_key="patient_id"
 )
 def patient_resource():
     query = """
@@ -28,7 +35,8 @@ def patient_resource():
         r.id = ra.RegistrationId
     LIMIT 20
     """
-    return sql_table(query)
+    return sql_table(query, table="patient")
+
 
 def main():
     # configure pipeline
@@ -38,7 +46,6 @@ def main():
         dataset_name='public'
     )
 
-    # run the pipeline with the source
     load_info = pipeline.run(
         patient_resource(),
         table_name="patient",
@@ -46,6 +53,7 @@ def main():
     )
 
     print(f"Load info: {load_info}")
+
 
 if __name__ == "__main__":
     main()
