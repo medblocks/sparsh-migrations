@@ -6,7 +6,7 @@ import os
 import dlt
 from dlt.common import pendulum
 from dlt.sources.credentials import ConnectionStringCredentials
-
+from pydantic import BaseModel
 from dlt.sources.sql_database import sql_database, sql_table, Table
 
 from sqlalchemy.sql.sqltypes import TypeEngine
@@ -14,27 +14,15 @@ import sqlalchemy as sa
 
 
 def load_select_tables_from_database() -> None:
-    """Use the sql_database source to reflect an entire database schema and load select tables from it.
-
-    This example sources data from the public Rfam MySQL database.
-    """
     # Create a pipeline
-    pipeline = dlt.pipeline(pipeline_name="rfam", destination='postgres', dataset_name="rfam_data")
+    pipeline = dlt.pipeline(pipeline_name="mhea", destination='postgres', dataset_name="mhea_replica")
 
-    # Credentials for the sample database.
-    # Note: It is recommended to configure credentials in `.dlt/secrets.toml` under `sources.sql_database.credentials`
-    # credentials = ConnectionStringCredentials(
-    #     "mysql+pymysql://rfamro@mysql-rfam-public.ebi.ac.uk:4497/Rfam"
-    # )
-    # To pass the credentials from `secrets.toml`, comment out the above credentials.
-    # And the credentials will be automatically read from `secrets.toml`.
-
-    # Configure the source to load a few select tables incrementally
-    source_1 = sql_database().with_resources("Registration")
+    # Configure the source to load a few select tables increentally
+    source_1 = sql_database().with_resources("Registration", "RegistrationAddress", "AM_State", "AM_Nationality", "AM_City")
 
     # Add incremental config to the resources. "updated" is a timestamp column in these tables that gets used as a cursor
-    # source_1.family.apply_hints(incremental=dlt.sources.incremental("updated"))
-    # source_1.clan.apply_hints(incremental=dlt.sources.incremental("updated"))
+    source_1.Registration.apply_hints(incremental=dlt.sources.incremental("RegistrationDate"))
+    source_1.RegistrationAddress.apply_hints(incremental=dlt.sources.incremental("EnteredDate"))
 
     # Run the pipeline. The merge write disposition merges existing rows in the destination by primary key
     info = pipeline.run(source_1, write_disposition="merge")
@@ -332,6 +320,21 @@ def specify_columns_to_load() -> None:
     info = pipeline.run(sql_alchemy_source)
     print(info)
 
+# class PatientModel(BaseModel):
+#     patient_id: int
+#     registration_date: pendulum.DateTime
+#     mrn: str
+#     name: str
+#     dob: str
+#     gender: str
+#     email: str
+#     mobile_no: str
+#     pin: str
+#     address: str
+
+# @dlt.resource(name="patient", columns=PatientModel, write_disposition="merge")
+# def load_patients_data():
+#     sql_table(incremental=dlt.sources.incremental("registration_date"))
 
 if __name__ == "__main__":
     # Load selected tables with different settings
