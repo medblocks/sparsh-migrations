@@ -1,1 +1,5 @@
-dlt===1.5.0
+dlt[cli,postgres,sql_database]===1.5.0
+pydantic
+SQLAlchemy
+mysqlclient
+streamlit

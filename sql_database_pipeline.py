@@ -19,7 +19,7 @@ def load_select_tables_from_database() -> None:
 
     # Configure the source to load a few select tables increentally
     source_1 = sql_database().with_resources("Registration", "RegistrationAddress", "AM_State",
-                                             "AM_Nationality", "AM_City", "emr_referraldetails", "__DoctorSpeciality", "BT_Encounter")
+                                             "AM_Nationality", "AM_City", "emr_referraldetails", "__DoctorSpeciality", "BT_Encounter", "ADT_PatientBedStatus", "AM_Bed", "ADT_Admission", "BT_Invoice")
 
     # Add incremental config to the resources. "updated" is a timestamp column in these tables that gets used as a cursor
     source_1.Registration.apply_hints(
@@ -27,6 +27,10 @@ def load_select_tables_from_database() -> None:
     source_1.RegistrationAddress.apply_hints(
         incremental=dlt.sources.incremental("EnteredDate"))
     source_1.BT_Encounter.apply_hints(
+        incremental=dlt.sources.incremental("EnteredDate"))
+    source_1.ADT_Admission.apply_hints(
+        incremental=dlt.sources.incremental("EnteredDate"))
+    source_1.BT_Invoice.apply_hints(
         incremental=dlt.sources.incremental("EnteredDate"))
 
     # Run the pipeline. The merge write disposition merges existing rows in the destination by primary key
