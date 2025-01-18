@@ -1,5 +1,4 @@
 # flake8: noqa
-import humanize
 from typing import Any
 import os
 
@@ -15,32 +14,40 @@ import sqlalchemy as sa
 
 def load_select_tables_from_database() -> None:
     # Create a pipeline
-    pipeline = dlt.pipeline(pipeline_name="mhea", destination='postgres', dataset_name="mhea_replica")
+    pipeline = dlt.pipeline(
+        pipeline_name="mhea", destination='postgres', dataset_name="mhea_replica")
 
     # Configure the source to load a few select tables increentally
-    source_1 = sql_database().with_resources("Registration", "RegistrationAddress", "AM_State", "AM_Nationality", "AM_City")
+    source_1 = sql_database().with_resources("Registration", "RegistrationAddress", "AM_State",
+                                             "AM_Nationality", "AM_City", "emr_referraldetails", "__DoctorSpeciality", "BT_Encounter")
 
     # Add incremental config to the resources. "updated" is a timestamp column in these tables that gets used as a cursor
-    source_1.Registration.apply_hints(incremental=dlt.sources.incremental("RegistrationDate"))
-    source_1.RegistrationAddress.apply_hints(incremental=dlt.sources.incremental("EnteredDate"))
+    source_1.Registration.apply_hints(
+        incremental=dlt.sources.incremental("RegistrationDate"))
+    source_1.RegistrationAddress.apply_hints(
+        incremental=dlt.sources.incremental("EnteredDate"))
+    source_1.BT_Encounter.apply_hints(
+        incremental=dlt.sources.incremental("EnteredDate"))
 
     # Run the pipeline. The merge write disposition merges existing rows in the destination by primary key
     info = pipeline.run(source_1, write_disposition="merge")
     print(info)
 
 
-def load_entire_database() -> None:
-    """Use the sql_database source to completely load all tables in a database"""
-    pipeline = dlt.pipeline(pipeline_name="rfam", destination='postgres', dataset_name="rfam_data")
+# def load_entire_database() -> None:
+#     """Use the sql_database source to completely load all tables in a database"""
+#     pipeline = dlt.pipeline(pipeline_name="rfam",
+#                             destination='postgres', dataset_name="rfam_data")
 
-    # By default the sql_database source reflects all tables in the schema
-    # The database credentials are sourced from the `.dlt/secrets.toml` configuration
-    source = sql_database()
+#     # By default the sql_database source reflects all tables in the schema
+#     # The database credentials are sourced from the `.dlt/secrets.toml` configuration
+#     source = sql_database()
 
-    # Run the pipeline. For a large db this may take a while
-    info = pipeline.run(source, write_disposition="replace")
-    print(humanize.precisedelta(pipeline.last_trace.finished_at - pipeline.last_trace.started_at))
-    print(info)
+#     # Run the pipeline. For a large db this may take a while
+#     info = pipeline.run(source, write_disposition="replace")
+#     print(humanize.precisedelta(
+#         pipeline.last_trace.finished_at - pipeline.last_trace.started_at))
+#     print(info)
 
 
 def load_standalone_table_resource() -> None:
@@ -227,7 +234,8 @@ def test_connectorx_speed() -> None:
         # keep source data types
         reflection_level="full_with_precision",
         # just to demonstrate how to setup a separate connection string for connectorx
-        backend_kwargs={"conn": "postgresql://loader:loader@localhost:5432/dlt_data"},
+        backend_kwargs={
+            "conn": "postgresql://loader:loader@localhost:5432/dlt_data"},
     )
 
     pipeline = dlt.pipeline(
@@ -267,7 +275,8 @@ def test_pandas_backend_verbatim_decimals() -> None:
         table_adapter_callback=_double_as_decimal_adapter,
         chunk_size=100000,
         # set coerce_float to False to represent them as string
-        backend_kwargs={"coerce_float": False, "dtype_backend": "numpy_nullable"},
+        backend_kwargs={"coerce_float": False,
+                        "dtype_backend": "numpy_nullable"},
         # preserve full typing info. this will parse
         reflection_level="full_with_precision",
     ).with_resources("family", "genome")
@@ -335,6 +344,7 @@ def specify_columns_to_load() -> None:
 # @dlt.resource(name="patient", columns=PatientModel, write_disposition="merge")
 # def load_patients_data():
 #     sql_table(incremental=dlt.sources.incremental("registration_date"))
+
 
 if __name__ == "__main__":
     # Load selected tables with different settings

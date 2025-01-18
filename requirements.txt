@@ -1,3 +1,1 @@
-SQLAlchemy===2.0.37
-sqlmesh[web,postgres]===0.146.0
-pandas===2.2.3
+dlt===1.5.0
