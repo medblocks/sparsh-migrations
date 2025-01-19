@@ -10,12 +10,10 @@ from dlt.sources.sql_database import sql_database, sql_table, Table
 
 from sqlalchemy.sql.sqltypes import TypeEngine
 import sqlalchemy as sa
+from prefect import flow
 
-
-# def load_select_tables_from_database() -> None:
-    # Create a pipeline
-
-if __name__ == "__main__":
+@flow(log_prints=True, name="MHEA Phase 1 pipeline")
+def create_mhea_pipeline():
     pipeline = dlt.pipeline(
         pipeline_name="mhea", destination='postgres', dataset_name="mhea_replica")
 
@@ -38,3 +36,7 @@ if __name__ == "__main__":
     # Run the pipeline. The merge write disposition merges existing rows in the destination by primary key
     info = pipeline.run(source_1, write_disposition="merge")
     print(info)
+
+
+if __name__ == "__main__":
+    create_mhea_pipeline()

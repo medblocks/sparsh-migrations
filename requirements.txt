@@ -3,3 +3,4 @@ pydantic
 SQLAlchemy
 mysqlclient
 streamlit
+prefect
