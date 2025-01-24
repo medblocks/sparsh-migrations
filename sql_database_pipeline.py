@@ -19,7 +19,7 @@ def create_mhea_pipeline():
 
     # Configure the source to load a few select tables increentally
     source_1 = sql_database().with_resources("Registration", "RegistrationAddress", "AM_State",
-                                             "AM_Nationality", "AM_City", "emr_referraldetails", "__DoctorSpeciality", "BT_Encounter", "ADT_PatientBedStatus", "AM_Bed", "ADT_Admission", "BT_Invoice", "adt_discharge","__CompanyPayorCategory")
+                                             "AM_Nationality", "AM_City", "emr_referraldetails", "__DoctorSpeciality", "BT_Encounter", "ADT_PatientBedStatus", "AM_Bed", "ADT_Admission", "BT_Invoice", "adt_discharge","__CompanyPayorCategory", "adt_discharge_diagnosis")
 
     # Add incremental config to the resources. "updated" is a timestamp column in these tables that gets used as a cursor
     source_1.Registration.apply_hints(
