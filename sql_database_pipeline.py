@@ -20,7 +20,7 @@ def create_mhea_pipeline():
 
     # Configure the source to load a few select tables increentally
     source_1 = sql_database().with_resources("Registration", "RegistrationAddress", "AM_State",
-                                             "AM_Nationality", "AM_City", "emr_referraldetails", "__DoctorSpeciality", "BT_Encounter", "ADT_PatientBedStatus", "AM_Bed", "ADT_Admission", "BT_Invoice", "adt_discharge", "__CompanyPayorCategory", "visit_assessments")
+                                             "AM_Nationality", "AM_City", "emr_referraldetails", "__DoctorSpeciality", "BT_Encounter", "ADT_PatientBedStatus", "AM_Bed", "ADT_Admission", "BT_Invoice", "adt_discharge", "__CompanyPayorCategory", "visit_assessments","BT_ServiceOrderMain","BT_ServiceOrderDtl")
 
     # Add incremental config to the resources. "updated" is a timestamp column in these tables that gets used as a cursor
     source_1.Registration.apply_hints(
@@ -36,6 +36,10 @@ def create_mhea_pipeline():
     source_1.adt_discharge.apply_hints(
         incremental=dlt.sources.incremental("EnteredDate"))
     source_1.visit_assessments.apply_hints(
+        incremental=dlt.sources.incremental("EnteredDate"))
+    source_1.BT_ServiceOrderMain.apply_hints(
+        incremental=dlt.sources.incremental("EnteredDate"))
+    source_1.BT_ServiceOrderDtl.apply_hints(
         incremental=dlt.sources.incremental("EnteredDate"))
 
     # Run the pipeline. The merge write disposition merges existing rows in the destination by primary key
