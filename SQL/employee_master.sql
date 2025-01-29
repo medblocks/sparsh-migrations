@@ -1,16 +1,19 @@
 create materialized view public.employee_master as
 select 
-id,
-active,
-code,
-employee_name,
-employee_type_id,
-title_id,
-gender_code,
-department_id,
-pin_code,
-designation_id
-from mhea_master.am_employee
+e.id,
+e.active,
+e.code,
+e.employee_name,
+et.description,
+e.gender_code,
+e.department_id,
+e.pin_code,
+d.description
+from mhea_master.am_employee as e
+left join mhea_master.am_designation as d 
+on e.designation_id = d.id
+left join mhea_master.am_employee_type as et
+on e.employee_type_id = et.id
 where
 enterprise_id = 8
 with no data;
