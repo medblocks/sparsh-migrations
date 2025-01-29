@@ -59,7 +59,7 @@ def create_master_pipeline():
     pipeline2 = dlt.pipeline(
         pipeline_name="mhea_master", destination='postgres', dataset_name="mhea_master")
 
-    source_2 = sql_database().with_resources("__AM_Employee", "__SARSH_Surgery_MASTER20240118", "__SparshServiceMaster20240120", "__SparshTariff23102024", "__Sparsh_Employee_Master", "__Sparsh_Specialization", "__Sparsh_Nomenclature", "__SParshEquipmentCharges")
+    source_2 = sql_database().with_resources("__AM_Employee", "__SARSH_Surgery_MASTER20240118", "__SparshServiceMaster20240120", "__SparshTariff23102024", "__Sparsh_Employee_Master", "__Sparsh_Specialization", "__Sparsh_Nomenclature", "__SParshEquipmentCharges", "AM_Department", "AM_FacilityDepartmentMapping", "AM_Role", "AM_RoleDepartmentMapping", "AM_RoleFacilityMapping", "AM_Designation", "AM_Company", "AM_CompanySponsorMapping", "AM_CompanyFacilityMapping", "__RRNagar_Payor_Master", "__YPRPayorSponsor", "__YPR_PayorMaster")
 
     source_2.__AM_Employee.apply_hints(
         incremental=dlt.sources.incremental("EnteredDate"))
