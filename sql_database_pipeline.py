@@ -24,31 +24,31 @@ def create_mhea_pipeline():
 
     # Add incremental config to the resources. "updated" is a timestamp column in these tables that gets used as a cursor
     source_1.Registration.apply_hints(
-        incremental=dlt.sources.incremental("RegistrationDate"))
+        incremental=dlt.sources.incremental("RegistrationDate"), primary_key="Id")
     source_1.RegistrationAddress.apply_hints(
-        incremental=dlt.sources.incremental("EnteredDate"))
+        incremental=dlt.sources.incremental("EnteredDate"), primary_key="Id")
     source_1.BT_Encounter.apply_hints(
-        incremental=dlt.sources.incremental("EnteredDate"))
+        incremental=dlt.sources.incremental("EnteredDate"), primary_key="Id")
     source_1.ADT_Admission.apply_hints(
-        incremental=dlt.sources.incremental("EnteredDate"))
+        incremental=dlt.sources.incremental("EnteredDate"), primary_key="Id")
     source_1.BT_Invoice.apply_hints(
-        incremental=dlt.sources.incremental("EnteredDate"))
+        incremental=dlt.sources.incremental("EnteredDate"), primary_key="Id")
     source_1.adt_discharge.apply_hints(
-        incremental=dlt.sources.incremental("EnteredDate"))
+        incremental=dlt.sources.incremental("EnteredDate"), primary_key="Id")
     source_1.visit_assessments.apply_hints(
-        incremental=dlt.sources.incremental("EnteredDate"))
+        incremental=dlt.sources.incremental("EnteredDate"), primary_key="Id")
     source_1.BT_ServiceOrderMain.apply_hints(
-        incremental=dlt.sources.incremental("EnteredDate"))
+        incremental=dlt.sources.incremental("EnteredDate"), primary_key="Id")
     source_1.BT_ServiceOrderDtl.apply_hints(
-        incremental=dlt.sources.incremental("EnteredDate"))
+        incremental=dlt.sources.incremental("EnteredDate"), primary_key="Id")
     source_1.AM_Employee.apply_hints(
-        incremental=dlt.sources.incremental("EnteredDate"))
+        incremental=dlt.sources.incremental("EnteredDate"), primary_key="Id")
     source_1.AM_Facility.apply_hints(
-        incremental=dlt.sources.incremental("EnteredDate"))
+        incremental=dlt.sources.incremental("EnteredDate"), primary_key="Id")
     source_1.AM_EmployeeFacilityMappingDoNotDelete.apply_hints(
-        incremental=dlt.sources.incremental("EnteredDate"))
+        incremental=dlt.sources.incremental("EnteredDate"), primary_key="Id")
     source_1.AM_EmployeeDoNotDelete.apply_hints(
-        incremental=dlt.sources.incremental("EnteredDate"))
+        incremental=dlt.sources.incremental("EnteredDate"), primary_key="Id")
 
     # Run the pipeline. The merge write disposition merges existing rows in the destination by primary key
     info = pipeline.run(source_1, write_disposition="merge")
@@ -62,7 +62,7 @@ def create_master_pipeline():
     source_2 = sql_database().with_resources("__AM_Employee", "__SARSH_Surgery_MASTER20240118", "__SparshServiceMaster20240120", "__SparshTariff23102024", "__Sparsh_Employee_Master", "__Sparsh_Specialization", "__Sparsh_Nomenclature", "__SParshEquipmentCharges", "AM_Department", "AM_FacilityDepartmentMapping", "AM_Role", "AM_RoleDepartmentMapping", "AM_RoleFacilityMapping", "AM_Designation", "AM_Company", "AM_CompanySponsorMapping", "AM_CompanyFacilityMapping", "__RRNagar_Payor_Master", "__YPRPayorSponsor", "__YPR_PayorMaster", "AM_EmployeeType", "AM_DepartmentSub", "AM_AdmissionType", "AM_RegistrationType", "AM_BedType", "__RRNAGAR_BedMaster", "__YeshwantpurBedMaster")
 
     source_2.__AM_Employee.apply_hints(
-        incremental=dlt.sources.incremental("EnteredDate"))
+        incremental=dlt.sources.incremental("EnteredDate"), primary_key="Id")
 
     info = pipeline2.run(source_2, write_disposition="merge")
     print(info)
