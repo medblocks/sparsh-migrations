@@ -52,4 +52,4 @@ left join mhea_replica.doctor_speciality ds on ds.doctor_id = som.order_doctor_i
 left join mhea_replica.registration_address ra on r.id = ra.registration_id 
 WITH
 	NO DATA;
-REFRESH MATERIALIZED VIEW public.patient_view;
+REFRESH MATERIALIZED VIEW public.billing_view;
