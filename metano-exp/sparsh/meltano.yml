@@ -12,9 +12,14 @@ plugins:
     pip_url: 
       git+https://github.com/transferwise/pipelinewise.git#subdirectory=singer-connectors/tap-mysql
     config:
-      database: Base_DB
       host: 13.200.36.86
       user: read_only
+      port: 3306
+      filter_dbs: Base_DB,Inventory_DB,Master_DB
+      database: Inventory_DB
+    select:
+    - Inventory_DB-BT_Invoice.*
+    - Inventory_DB-INVT_OPIssueSaleDetails.*
   loaders:
   - name: target-postgres
     variant: meltanolabs
