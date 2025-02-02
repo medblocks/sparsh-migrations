@@ -12,6 +12,8 @@ from dlt.sources.sql_database import sql_database, sql_table, Table
 from sqlalchemy.sql.sqltypes import TypeEngine
 import sqlalchemy as sa
 from prefect import flow
+import re
+import json
 
 
 def convert_latin1_to_utf8(data):
@@ -83,30 +85,46 @@ def create_master_pipeline():
     print(info)
 
 
-@flow(log_prints=True, name="Inventory Master mapping pipeline")
+def clean_string(value):
+    if isinstance(value, str):
+        # Remove NUL characters and other non-printable characters
+        return re.sub(r'[\x00-\x1F\x7F-\x9F]', '', value)
+    return value
+
+
+def custom_string_serializer(value):
+    if isinstance(value, str):
+        # Clean the string before serializing
+        cleaned_value = clean_string(value)
+        return json.dumps(cleaned_value)[1:-1]  # Remove the surrounding quotes
+    return value
+
+
 def inventory_master_pipeline():
     pipeline3 = dlt.pipeline(
-        pipeline_name="inventory_pipeline", destination='postgres', dataset_name="inventory_pipeline")
+        pipeline_name="inventory_pipeline2", destination='sqlalchemy')
 
+    def transform_to_utf(table: sa.Table) -> sa.Table:
+        for column in table.columns.values():
+            if isinstance(column.type, sa.String):
+                column.type = sa.String(length=512)
+                column.info['serializer'] = custom_string_serializer
+        return table
+
+    def clean_data(data):
+        return {k: clean_string(v) if isinstance(v, str) else v for k, v in data.items()}
     source_3 = sql_database().with_resources(
-        'BT_Invoice', 'INVT_OPIssueSaleDetails')
+        'BT_Invoice',
+        'INVT_OPIssueSaleDetails'
+    )
     source_3.BT_Invoice.apply_hints(
-        incremental=dlt.sources.incremental("EnteredDate"), primary_key="Id",
-
+        incremental=dlt.sources.incremental("EnteredDate"),
+        primary_key="Id",
     )
     source_3.INVT_OPIssueSaleDetails.apply_hints(
-        incremental=dlt.sources.incremental("EnteredDate"), primary_key="Id",
-
+        incremental=dlt.sources.incremental("EnteredDate"),
+        primary_key="Id",
     )
-
-    def transform_to_utf8mb4(data):
-        return {k: v.encode('latin1').decode('utf8').encode('utf8mb4').decode('utf8mb4') if isinstance(v, str) else v for k, v in data.items()}
-
-    # data = pipeline3.dataset()
-    # items_relation = data.items
-    # for df_chunk in items_relation.iter_df(chunk_size=500):
-    #     df_chunk = df_chunk.apply(transform_to_utf8mb4, axis=1)
-
     pipeline3.run(source_3, write_disposition="merge")
 
 
