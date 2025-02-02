@@ -1,27 +1,48 @@
-[sources.sql_database.credentials]
+[mhea.sources.sql_database.credentials]
+drivername = "mysql"
+database = "Base_DB"
+password = "4NjneaNJLNewew"
+username = "read_only"
+host = "13.200.36.86"
+port = 3306
 
-connection_string = "mysql://read_only:4NjneaNJLNewew@13.200.36.86:3306/Base_DB"
+[mhea_master.sources.sql_database.credentials]
+drivername = "mysql"
+database = "Master_DB"
+password = "4NjneaNJLNewew"
+username = "read_only"
+host = "13.200.36.86"
+port = 3306
 
+[inventory_pipeline.sources.sql_database.credentials]
+drivername = "mysql"
+database = "Inventory_DB"
+password = "4NjneaNJLNewew"
+username = "read_only"
+host = "13.200.36.86"
+port = 3306
+charset = "utf8mb4"
 
+[mhea.destination.postgres.credentials]
+drivername = "postgres"
+database = "medha"
+password = "44569491a9d43226b06f"
+username = "postgres"
+host = "postgres.postgres"
+port = 5432
 
-[destination.postgres.credentials]
+[inventory_pipeline.destination.postgres.credentials]
+drivername = "postgres"
+database = "medha"
+password = "44569491a9d43226b06f"
+username = "postgres"
+host = "postgres.postgres"
+port = 5432
 
-connection_string = "postgres://postgres:44569491a9d43226b06f@13.200.177.83:31565/medha?connect_timeout=15"
-
-
-[patient_pipeline.sources.sql_database.credentials]
-drivername="mysql"
-username="read_only"
-password="4NjneaNJLNewew"
-database="Base_DB"
-host="13.200.36.86"
-port=3306
-
-
-[patient_pipeline.destination.postgres.credentials]
-drivername="psql"
-username="postgres"
-password="44569491a9d43226b06f"
-database="medha"
-host="13.200.177.83"
-port=31565
+[mhea_master.destination.postgres.credentials]
+drivername = "postgres"
+database = "medha"
+password = "44569491a9d43226b06f"
+username = "postgres"
+host = "postgres.postgres"
+port = 5432
