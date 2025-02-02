@@ -1,0 +1,21 @@
+version: 1
+default_environment: dev
+project_id: a55e4a0b-bb61-49f9-9b80-d256ec8d8e0d
+environments:
+- name: dev
+- name: staging
+- name: prod
+plugins:
+  extractors:
+  - name: tap-mysql
+    variant: transferwise
+    pip_url: 
+      git+https://github.com/transferwise/pipelinewise.git#subdirectory=singer-connectors/tap-mysql
+    config:
+      database: Base_DB
+      host: 13.200.36.86
+      user: read_only
+  loaders:
+  - name: target-postgres
+    variant: meltanolabs
+    pip_url: meltanolabs-target-postgres
