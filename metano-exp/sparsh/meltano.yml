@@ -19,3 +19,8 @@ plugins:
   - name: target-postgres
     variant: meltanolabs
     pip_url: meltanolabs-target-postgres
+    config:
+      database: medha
+      default_target_schema: meltano
+      port: 5432
+      host: postgres.postgres

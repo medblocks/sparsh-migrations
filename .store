@@ -46,3 +46,7 @@ password = "44569491a9d43226b06f"
 username = "postgres"
 host = "postgres.postgres"
 port = 5432
+
+
+TARGET_POSTGRES_PASSWORD='44569491a9d43226b06f'
+TAP_MYSQL_PASSWORD='4NjneaNJLNewew'
