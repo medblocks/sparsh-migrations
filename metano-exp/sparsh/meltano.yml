@@ -37,7 +37,7 @@ plugins:
     - Inventory_DB-BT_Invoice.patientPayableAmount
     - Inventory_DB-BT_Invoice.invoicestatusid
     - Inventory_DB-BT_Invoice.facilityName
-    - Inventory_DB-BT_Invoice.billType
+    # - Inventory_DB-BT_Invoice.billType
     - Inventory_DB-INVT_OPIssueSaleDetails.*
     metadata:
       Inventory_DB-BT_Invoice:
