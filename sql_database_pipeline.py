@@ -88,26 +88,36 @@ def inventory_master_pipeline():
     pipeline3 = dlt.pipeline(
         pipeline_name="inventory_pipeline", destination='postgres', dataset_name="inventory_pipeline")
 
-    source_3 = sql_database().with_resources(
-        'BT_Invoice', 'INVT_OPIssueSaleDetails')
-    source_3.BT_Invoice.apply_hints(
-        incremental=dlt.sources.incremental("EnteredDate"), primary_key="Id",
+    invoice_columns = [
+        "Id",
+        "Active",
+        "EnteredDate",
+        "ModifiedDate",
+        # "enterpriseId",
+        "facilityId",
+        "invoiceNo",
+        "invoiceDate",
+        # "billType",
+        "registrationId",
+        "encounterId",
+        "encounterType",
+        "invoiceAmount",
+        "mouDiscount",
+        "addOnDiscount",
+        "patientAmount",
+        "gstAmount",
+        "payorAmount",
+        "patientPayableAmount",
+        "invoicestatusid",
+        "facilityName",
+    ]
 
+    invoice_table = sql_table(
+        table="BT_Invoice", incremental=dlt.sources.incremental('ModifiedDate'),
+        included_columns=invoice_columns
     )
-    source_3.INVT_OPIssueSaleDetails.apply_hints(
-        incremental=dlt.sources.incremental("EnteredDate"), primary_key="Id",
 
-    )
-
-    def transform_to_utf8mb4(data):
-        return {k: v.encode('latin1').decode('utf8').encode('utf8mb4').decode('utf8mb4') if isinstance(v, str) else v for k, v in data.items()}
-
-    # data = pipeline3.dataset()
-    # items_relation = data.items
-    # for df_chunk in items_relation.iter_df(chunk_size=500):
-    #     df_chunk = df_chunk.apply(transform_to_utf8mb4, axis=1)
-
-    pipeline3.run(source_3, write_disposition="merge")
+    pipeline3.run(invoice_table, write_disposition="merge")
 
 
 if __name__ == "__main__":

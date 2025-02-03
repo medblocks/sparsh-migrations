@@ -18,8 +18,35 @@ plugins:
       filter_dbs: Base_DB,Inventory_DB,Master_DB
       database: Inventory_DB
     select:
-    - Inventory_DB-BT_Invoice.*
+    - Inventory_DB-BT_Invoice.Id
+    - Inventory_DB-BT_Invoice.Active
+    - Inventory_DB-BT_Invoice.EnteredDate
+    - Inventory_DB-BT_Invoice.ModifiedDate
+    - Inventory_DB-BT_Invoice.facilityId
+    - Inventory_DB-BT_Invoice.invoiceNo
+    - Inventory_DB-BT_Invoice.invoiceDate
+    - Inventory_DB-BT_Invoice.registrationId
+    - Inventory_DB-BT_Invoice.encounterId
+    - Inventory_DB-BT_Invoice.encounterType
+    - Inventory_DB-BT_Invoice.invoiceAmount
+    - Inventory_DB-BT_Invoice.mouDiscount
+    - Inventory_DB-BT_Invoice.addOnDiscount
+    - Inventory_DB-BT_Invoice.patientAmount
+    - Inventory_DB-BT_Invoice.gstAmount
+    - Inventory_DB-BT_Invoice.payorAmount
+    - Inventory_DB-BT_Invoice.patientPayableAmount
+    - Inventory_DB-BT_Invoice.invoicestatusid
+    - Inventory_DB-BT_Invoice.facilityName
+    - Inventory_DB-BT_Invoice.billType
     - Inventory_DB-INVT_OPIssueSaleDetails.*
+    metadata:
+      Inventory_DB-BT_Invoice:
+        replication-method: INCREMENTAL
+        replication-key: EnteredDate
+      Inventory_DB-INVT_OPIssueSaleDetails:
+        replication-method: INCREMENTAL
+        replication-key: EnteredDate
+
   loaders:
   - name: target-postgres
     variant: meltanolabs
@@ -29,3 +56,5 @@ plugins:
       default_target_schema: meltano
       port: 5432
       host: postgres.postgres
+      user: postgres
+      dialect+driver: postgresql+psycopg2
