@@ -24,7 +24,7 @@ def clean_bt_invoice(data):
     return {k: convert_latin1_to_utf8(v) for k, v in data.items()}
 
 
-@flow(log_prints=True, name="MHEA Phase 1 pipeline")
+@flow(log_prints=True, name="MHEA Base database migration pipeline")
 def create_mhea_pipeline():
     pipeline = dlt.pipeline(
         pipeline_name="mhea", destination='postgres', dataset_name="mhea_replica")
@@ -74,10 +74,12 @@ def create_master_pipeline():
         pipeline_name="mhea_master", destination='postgres', dataset_name="mhea_master")
 
     source_2 = sql_database().with_resources("__AM_Employee", "__SARSH_Surgery_MASTER20240118", "__SparshServiceMaster20240120", "__SparshTariff23102024", "__Sparsh_Employee_Master", "__Sparsh_Specialization", "__Sparsh_Nomenclature", "__SParshEquipmentCharges", "AM_Department", "AM_FacilityDepartmentMapping", "AM_Role", "AM_RoleDepartmentMapping",
-                                             "AM_RoleFacilityMapping", "AM_Designation", "AM_Company", "AM_CompanySponsorMapping", "AM_CompanyFacilityMapping", "__RRNagar_Payor_Master", "__YPRPayorSponsor", "__YPR_PayorMaster", "AM_EmployeeType", "AM_DepartmentSub", "AM_AdmissionType", "AM_RegistrationType", "AM_BedType", "__RRNAGAR_BedMaster", "__YeshwantpurBedMaster")
+                                             "AM_RoleFacilityMapping", "AM_Designation", "AM_Company", "AM_CompanySponsorMapping", "AM_CompanyFacilityMapping", "__RRNagar_Payor_Master", "__YPRPayorSponsor", "__YPR_PayorMaster", "AM_EmployeeType", "AM_DepartmentSub", "AM_AdmissionType", "AM_RegistrationType", "AM_BedType", "__RRNAGAR_BedMaster", "__YeshwantpurBedMaster", "AM_StatusMaster")
 
     source_2.__AM_Employee.apply_hints(
         incremental=dlt.sources.incremental("EnteredDate"), primary_key="Id")
+    source_2.AM_StatusMaster.apply_hints(
+        incremental=dlt.sources.incremental("ModifiedDate"), primary_key="Id")
 
     info = pipeline2.run(source_2, write_disposition="merge")
     print(info)
