@@ -14,7 +14,26 @@ username = "read_only"
 host = "13.200.36.86"
 port = 3306
 
-[inventory_pipeline.sources.sql_database.credentials]
+[sources.sql_database.INVT_OPIssueSaleDetails.credentials]
+drivername = "mysql"
+database = "Inventory_DB"
+password = "4NjneaNJLNewew"
+username = "read_only"
+host = "13.200.36.86"
+port = 3306
+charset = "utf8mb4"
+
+[sources.sql_database.BT_Invoice.credentials]
+drivername = "mysql"
+database = "Inventory_DB"
+password = "4NjneaNJLNewew"
+username = "read_only"
+host = "13.200.36.86"
+port = 3306
+charset = "utf8mb4"
+
+
+[inventory_pipeline3.sources.sql_database.credentials]
 drivername = "mysql"
 database = "Inventory_DB"
 password = "4NjneaNJLNewew"
@@ -24,15 +43,15 @@ port = 3306
 charset = "utf8mb4"
 
 [mhea.destination.postgres.credentials]
-drivername = "postgres"
+drivername = "postgresql+psycopg2"
 database = "medha"
 password = "44569491a9d43226b06f"
 username = "postgres"
 host = "postgres.postgres"
 port = 5432
 
-[inventory_pipeline.destination.postgres.credentials]
-drivername = "postgres"
+[inventory_pipeline3.destination.postgres.credentials]
+drivername = "postgresql+psycopg2"
 database = "medha"
 password = "44569491a9d43226b06f"
 username = "postgres"
@@ -40,13 +59,12 @@ host = "postgres.postgres"
 port = 5432
 
 [mhea_master.destination.postgres.credentials]
-drivername = "postgres"
+drivername = "postgresql+psycopg2"
 database = "medha"
 password = "44569491a9d43226b06f"
 username = "postgres"
 host = "postgres.postgres"
 port = 5432
-
 
 TARGET_POSTGRES_PASSWORD='44569491a9d43226b06f'
 TAP_MYSQL_PASSWORD='4NjneaNJLNewew'

@@ -86,18 +86,16 @@ def create_master_pipeline():
 @flow(log_prints=True, name="Inventory Master mapping pipeline")
 def inventory_master_pipeline():
     pipeline3 = dlt.pipeline(
-        pipeline_name="inventory_pipeline", destination='postgres', dataset_name="inventory_pipeline")
+        pipeline_name="inventory_pipeline3", destination='postgres', dataset_name="inventory_pipeline3")
 
     invoice_columns = [
         "Id",
         "Active",
         "EnteredDate",
         "ModifiedDate",
-        # "enterpriseId",
         "facilityId",
         "invoiceNo",
         "invoiceDate",
-        # "billType",
         "registrationId",
         "encounterId",
         "encounterType",
@@ -114,13 +112,17 @@ def inventory_master_pipeline():
 
     invoice_table = sql_table(
         table="BT_Invoice", incremental=dlt.sources.incremental('ModifiedDate'),
-        included_columns=invoice_columns
+        included_columns=invoice_columns,
+        write_disposition="merge"
     )
+    invt_table = sql_table(table="INVT_OPIssueSaleDetails", incremental=dlt.sources.incremental('ModifiedDate'),
+                           write_disposition="merge")
 
-    pipeline3.run(invoice_table, write_disposition="merge")
+    pipeline3.run(invoice_table)
+    pipeline3.run(invt_table)
 
 
 if __name__ == "__main__":
-    create_master_pipeline()
-    create_mhea_pipeline()
-    # inventory_master_pipeline()
+    # create_master_pipeline()
+    # create_mhea_pipeline()
+    inventory_master_pipeline()
