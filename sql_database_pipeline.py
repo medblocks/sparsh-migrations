@@ -123,6 +123,6 @@ def inventory_master_pipeline():
 
 
 if __name__ == "__main__":
-    # create_master_pipeline()
-    # create_mhea_pipeline()
+    create_master_pipeline()
+    create_mhea_pipeline()
     inventory_master_pipeline()
