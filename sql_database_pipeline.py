@@ -31,7 +31,7 @@ def create_mhea_pipeline():
 
     # Configure the source to load a few select tables increentally
     source_1 = sql_database().with_resources("Registration", "RegistrationAddress", "AM_State",
-                                             "AM_Nationality", "AM_City", "emr_referraldetails", "__DoctorSpeciality", "BT_Encounter", "ADT_PatientBedStatus", "AM_Bed", "ADT_Admission", "BT_Invoice", "adt_discharge", "__CompanyPayorCategory", "visit_assessments", "BT_ServiceOrderMain", "BT_ServiceOrderDtl", "AM_Employee", "AM_Facility", "AM_EmployeeFacilityMappingDoNotDelete", "AM_EmployeeDoNotDelete", "BT_InvoicePatientVisit")
+                                             "AM_Nationality", "AM_City", "emr_referraldetails", "__DoctorSpeciality", "BT_Encounter", "ADT_PatientBedStatus", "AM_Bed", "ADT_Admission", "BT_Invoice", "adt_discharge", "__CompanyPayorCategory", "visit_assessments", "BT_ServiceOrderMain", "BT_ServiceOrderDtl", "AM_Employee", "AM_Facility", "AM_EmployeeFacilityMappingDoNotDelete", "AM_EmployeeDoNotDelete", "BT_InvoicePatientVisit", "ADT_admissionotherdetail", "adt_estimate_main", "adt_estimate_bedcatgwise_amt", "adt_estimate_details")
 
     # Add incremental config to the resources. "updated" is a timestamp column in these tables that gets used as a cursor
     source_1.Registration.apply_hints(
@@ -61,6 +61,12 @@ def create_mhea_pipeline():
     source_1.AM_EmployeeDoNotDelete.apply_hints(
         incremental=dlt.sources.incremental("EnteredDate"), primary_key="Id")
     source_1.BT_InvoicePatientVisit.apply_hints(
+        incremental=dlt.sources.incremental("EnteredDate"), primary_key="Id")
+    source_1.ADT_admissionotherdetail.apply_hints(
+        incremental=dlt.sources.incremental("EnteredDate"), primary_key="Id")
+    source_1.adt_estimate_main.apply_hints(
+        incremental=dlt.sources.incremental("EnteredDate"), primary_key="Id")
+    source_1.adt_estimate_details.apply_hints(
         incremental=dlt.sources.incremental("EnteredDate"), primary_key="Id")
 
     # Run the pipeline. The merge write disposition merges existing rows in the destination by primary key
