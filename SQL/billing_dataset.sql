@@ -1,3 +1,5 @@
+CREATE MATERIALIZED VIEW IF NOT EXISTS public.billing_dataset
+as
 select
 i."facilityId" as unit_id,
 i."encounterType" as  visit_type,
@@ -26,6 +28,7 @@ sod.department_name as revenue_department,
 i."referByName" as referring_consultant,
 sod.doctor_name as rendering_consultant,
 ad.description as ordered_department,
+sm.status_value as invoice_status,
 i."mouDiscount" as discretionary_discount,
 i."addOnDiscount" as non_discretionary_discount,
 i."patientPayableAmount" as patient_payable,
@@ -44,4 +47,6 @@ left join meltano."INVT_OPIssueSaleDetails" as op on op."InvoiceNo" =i."invoiceN
 left join mhea_replica.bt_service_order_main as som on som.encounter_id = i."encounterId"
 left join mhea_replica.am_employee as ae on ae.id = sod.doctor_id 
 inner join mhea_master.am_department as ad on ad.id = ae.department_id
-limit 25;
+left join mhea_master.am_status_master as sm on sm.id = i.invoicestatusid
+with no data;
+refresh materialized view public.billing_dataset;
