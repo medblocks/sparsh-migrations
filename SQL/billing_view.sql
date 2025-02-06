@@ -1,45 +1,42 @@
 create materialized view if not exists public.billing_view as
-SELECT
-	i."facilityId" as unit_id,
-	i."invoiceDate" as primary_date,
-	i."encounterType" as visit_type,
-	i."EnteredDate" as date_of_the_visit,
-	r.registration_no as mrno_uhid,
-	i."invoiceNo" as invoice_no,
-	sodtl.invoice_id as invoice_line_id,
-	i."invoiceDate" as invoice_approved_date,
-	sodtl.service_id as service_billed,
-	i."invoiceDate" as service_rendered_date,
-	sodtl.unit as quantity,
-	i."invoiceAmount" as gross_revenue,
-	(
-		i."invoiceAmount" - (i."mouDiscount") + (i."addOnDiscount")
-	) as net_revenue,
-	op."InvoiceId" as item_billed,
-	op."MRP" as mrp_per_unit,
-	op."GrossAmount" as total_mrp,
-	op."UnitCost" as cost_price_per_unit,
-	op."CalculatedUnitCost" as total_cost_price,
+select
+	i.facility_id as unit_id,
+	i.invoice_date as primary_date,
+	i.encounter_type as visit_type,
+	e.encounter_date as visit_date,
+	e.encounter_no as visit_number,
+	i.registration_id as patient_id,
+	r.registration_no as mrn,
+	i.invoice_no as invoice_no,
+	i.invoice_date as invoice_date,
+	so.service_id as service_billed,
+	so.unit as quantity,
+	i.invoice_amount as gross_revenue,
+	i.invoice_amount - (i.mou_discount + i.add_on_discount) as net_revenue,
+	COALESCE(ip.item_id, op.item_id) as item_billed,
+	COALESCE(ip.mrp, op.mrp) as mrp_per_unit,
+	COALESCE(ip.gross_amount, op.gross_amount) as total_mrp,
+	COALESCE(ip.unit_cost, op.unit_cost) as cost_price_per_unit,
+	COALESCE(ip.calculated_unit_cost, op.calculated_unit_cost) as total_cost_price,
 	som.service_order_date as ordered_date,
-	i."mouDiscount" as discretionary_discount,
-	i."addOnDiscount" as non_discretionary_discount,
-	i."patientPayableAmount" as patient_payable,
-	i."payorAmount" as sponsor_payable,
-	i."sponsorName" as sponsor_key,
-	i."payorPlanId" as plan_id,
-	i."payorPlanName" as invoice_plan_id
+	i.mou_discount as disc_discount,
+	i.add_on_discount as non_disc_discount,
+	i.patient_payable_amount as patient_payable,
+	i.payor_amount as sponsor_payable,
+	so.under_package as package,
+	so.package_id as service_package_id
 from
-	meltano."BT_Invoice" as i
-	left join mhea_replica.registration as r on r.id = i."registrationId"
-	left join mhea_replica.bt_service_order_dtl as sodtl on sodtl.invoice_id = i."Id"
-	left join meltano."INVT_OPIssueSaleDetails" as op on op."InvoiceNo" = i."invoiceNo"
-	left join mhea_replica.bt_service_order_main as som on som.encounter_id = i."encounterId"
+	inventory_pipeline4.bt_invoice as i
+	left join mhea_replica.bt_encounter as e on e.id = i.encounter_id
+	left join mhea_replica.registration as r on r.id = i.registration_id
+	left join mhea_replica.bt_service_order_dtl so on so.invoice_id = i.id
+	left join mhea_replica.bt_service_order_main som on som.encounter_id = i.encounter_id
+	left join inventory_pipeline4.invt_ip_issue_details ip on ip.invoice_id = i.id
+	left join inventory_pipeline4.invt_op_issue_sale_details op on op.invoice_id = i.id
 where
-	i."facilityId" = 32
-	OR i."facilityId" = 34
-	OR i."facilityId" = 36
-	OR i."facilityId" = 37
-with
-	no data;
-
+	i.facility_id = 32
+	OR i.facility_id = 34
+	OR i.facility_id = 36
+	OR i.facility_id = 37
+with no data;
 REFRESH MATERIALIZED VIEW public.billing_view;
