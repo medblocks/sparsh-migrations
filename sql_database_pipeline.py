@@ -26,6 +26,7 @@ def clean_bt_invoice(data):
 
 @flow(log_prints=True, name="MHEA Base database migration pipeline")
 def create_mhea_pipeline():
+    # Base_DB
     pipeline = dlt.pipeline(
         pipeline_name="mhea", destination='postgres', dataset_name="mhea_replica")
 
@@ -76,6 +77,7 @@ def create_mhea_pipeline():
 
 @flow(log_prints=True, name="MHEA Master mapping pipeline")
 def create_master_pipeline():
+    # Master_DB
     pipeline2 = dlt.pipeline(
         pipeline_name="mhea_master", destination='postgres', dataset_name="mhea_master")
 
@@ -93,6 +95,7 @@ def create_master_pipeline():
 
 @flow(log_prints=True, name="Inventory Master mapping pipeline")
 def inventory_master_pipeline():
+    # Inventory_DB
     pipeline3 = dlt.pipeline(
         pipeline_name="inventory_pipeline4", destination='postgres', dataset_name="inventory_pipeline4")
 
