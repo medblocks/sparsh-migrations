@@ -10,15 +10,13 @@ SELECT
   r.mobile_no AS mobile_no,
   ra.present_pin_code AS pin,
   CONCAT (ra.present_street, ' ', ra.present_flat_house_no) AS address,
-  tc.description as district,
-  ts.description as state,
-  tn.description as country
+  rm.present_city as city,
+  rm.present_area as district,
+  rm.present_country as country
 FROM
   mhea_replica.registration AS r
   LEFT JOIN mhea_replica.registration_address AS ra ON r.id = ra.registration_id
-  LEFT JOIN mhea_replica.am_city as tc on ra.present_city_id = tc.id
-  LEFT JOIN mhea_replica.am_state as ts on ra.present_state_id = ts.id
-  LEFT JOIN mhea_replica.am_nationality as tn on ra.present_country_id = tn.id
+  LEFT JOIN mhea_replica.registration_master_data_text rm ON rm.registration_id = r.id
 where
   r.enterprise_id = 8
 WITH

@@ -32,7 +32,7 @@ def create_mhea_pipeline():
 
     # Configure the source to load a few select tables increentally
     source_1 = sql_database().with_resources("Registration", "RegistrationAddress", "AM_State",
-                                             "AM_Nationality", "AM_City", "emr_referraldetails", "__DoctorSpeciality", "BT_Encounter", "ADT_PatientBedStatus", "AM_Bed", "ADT_Admission", "BT_Invoice", "adt_discharge", "__CompanyPayorCategory", "visit_assessments", "BT_ServiceOrderMain", "BT_ServiceOrderDtl", "AM_Employee", "AM_Facility", "AM_EmployeeFacilityMappingDoNotDelete", "AM_EmployeeDoNotDelete", "BT_InvoicePatientVisit", "ADT_admissionotherdetail", "adt_estimate_main", "adt_estimate_bedcatgwise_amt", "adt_estimate_details")
+                                             "AM_Nationality", "AM_City", "emr_referraldetails", "__DoctorSpeciality", "BT_Encounter", "ADT_PatientBedStatus", "AM_Bed", "ADT_Admission", "BT_Invoice", "adt_discharge", "__CompanyPayorCategory", "visit_assessments", "BT_ServiceOrderMain", "BT_ServiceOrderDtl", "AM_Employee", "AM_Facility", "AM_EmployeeFacilityMappingDoNotDelete", "AM_EmployeeDoNotDelete", "BT_InvoicePatientVisit", "ADT_admissionotherdetail", "adt_estimate_main", "adt_estimate_bedcatgwise_amt", "adt_estimate_details", "registration_master_data_text")
 
     # Add incremental config to the resources. "updated" is a timestamp column in these tables that gets used as a cursor
     source_1.Registration.apply_hints(
@@ -69,6 +69,8 @@ def create_mhea_pipeline():
         incremental=dlt.sources.incremental("EnteredDate"), primary_key="Id")
     source_1.adt_estimate_details.apply_hints(
         incremental=dlt.sources.incremental("EnteredDate"), primary_key="Id")
+    source_1.registration_master_data_text.apply_hints(
+        incremental=dlt.sources.incremental("EnteredDate"), primary_key="Id")
 
     # Run the pipeline. The merge write disposition merges existing rows in the destination by primary key
     info = pipeline.run(source_1, write_disposition="merge")
@@ -81,12 +83,14 @@ def create_master_pipeline():
     pipeline2 = dlt.pipeline(
         pipeline_name="mhea_master", destination='postgres', dataset_name="mhea_master")
 
-    source_2 = sql_database().with_resources("__AM_Employee", "__SARSH_Surgery_MASTER20240118", "__SparshServiceMaster20240120", "__SparshTariff23102024", "__Sparsh_Employee_Master", "__Sparsh_Specialization", "__Sparsh_Nomenclature", "__SParshEquipmentCharges", "AM_Department", "AM_FacilityDepartmentMapping", "AM_Role", "AM_RoleDepartmentMapping",
-                                             "AM_RoleFacilityMapping", "AM_Designation", "AM_Company", "AM_CompanySponsorMapping", "AM_CompanyFacilityMapping", "__RRNagar_Payor_Master", "__YPRPayorSponsor", "__YPR_PayorMaster", "AM_EmployeeType", "AM_DepartmentSub", "AM_AdmissionType", "AM_RegistrationType", "AM_BedType", "__RRNAGAR_BedMaster", "__YeshwantpurBedMaster", "AM_StatusMaster")
+    source_2 = sql_database().with_resources("__AM_Employee", "AM_Department", "AM_FacilityDepartmentMapping", "AM_Role", "AM_RoleDepartmentMapping",
+                                             "AM_RoleFacilityMapping", "AM_Designation", "AM_Company", "AM_CompanySponsorMapping", "AM_CompanyFacilityMapping", "AM_EmployeeType", "AM_DepartmentSub", "AM_AdmissionType", "AM_RegistrationType", "AM_BedType", "AM_StatusMaster", "AM_ServiceMst")
 
     source_2.__AM_Employee.apply_hints(
         incremental=dlt.sources.incremental("EnteredDate"), primary_key="Id")
     source_2.AM_StatusMaster.apply_hints(
+        incremental=dlt.sources.incremental("ModifiedDate"), primary_key="Id")
+    source_2.AM_ServiceMst.apply_hints(
         incremental=dlt.sources.incremental("ModifiedDate"), primary_key="Id")
 
     info = pipeline2.run(source_2, write_disposition="merge")
@@ -99,10 +103,12 @@ def inventory_master_pipeline():
     pipeline3 = dlt.pipeline(
         pipeline_name="inventory_pipeline4", destination='postgres', dataset_name="inventory_pipeline4")
     source_3 = sql_database().with_resources(
-        "INVT_OPIssueSaleDetails", "INVT_IPIssueDetails")
+        "INVT_OPIssueSaleDetails", "INVT_IPIssueDetails", "INVM_ItemMaster")
     source_3.INVT_OPIssueSaleDetails.apply_hints(
         incremental=dlt.sources.incremental("ModifiedDate"), primary_key="Id")
     source_3.INVT_IPIssueDetails.apply_hints(
+        incremental=dlt.sources.incremental("ModifiedDate"), primary_key="Id")
+    source_3.INVM_ItemMaster.apply_hints(
         incremental=dlt.sources.incremental("ModifiedDate"), primary_key="Id")
     pipeline3.run(source_3, write_disposition="merge")
 

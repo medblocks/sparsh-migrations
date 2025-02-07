@@ -19,6 +19,7 @@ select
 	COALESCE(ip.unit_cost, op.unit_cost) as cost_price_per_unit,
 	COALESCE(ip.calculated_unit_cost, op.calculated_unit_cost) as total_cost_price,
 	som.service_order_date as ordered_date,
+	so.doctor_id as rendering_consultant,
 	i.mou_discount as disc_discount,
 	i.add_on_discount as non_disc_discount,
 	i.patient_payable_amount as patient_payable,
@@ -26,7 +27,7 @@ select
 	so.under_package as package,
 	so.package_id as service_package_id
 from
-	inventory_pipeline4.bt_invoice as i
+	mhea_replica.bt_invoice as i
 	left join mhea_replica.bt_encounter as e on e.id = i.encounter_id
 	left join mhea_replica.registration as r on r.id = i.registration_id
 	left join mhea_replica.bt_service_order_dtl so on so.invoice_id = i.id
@@ -38,5 +39,7 @@ where
 	OR i.facility_id = 34
 	OR i.facility_id = 36
 	OR i.facility_id = 37
-with no data;
+with
+	no data;
+
 REFRESH MATERIALIZED VIEW public.billing_view;
