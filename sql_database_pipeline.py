@@ -98,46 +98,16 @@ def inventory_master_pipeline():
     # Inventory_DB
     pipeline3 = dlt.pipeline(
         pipeline_name="inventory_pipeline4", destination='postgres', dataset_name="inventory_pipeline4")
-
-    invoice_columns = [
-        "Id",
-        "Active",
-        "EnteredDate",
-        "ModifiedDate",
-        "facilityId",
-        "invoiceNo",
-        "invoiceDate",
-        "registrationId",
-        "encounterId",
-        "encounterType",
-        "invoiceAmount",
-        "mouDiscount",
-        "addOnDiscount",
-        "patientAmount",
-        "gstAmount",
-        "payorAmount",
-        "patientPayableAmount",
-        "invoicestatusid",
-        "facilityName",
-    ]
-
-    invoice_table = sql_table(
-        table="BT_Invoice", incremental=dlt.sources.incremental('ModifiedDate'),
-        included_columns=invoice_columns,
-        write_disposition="merge"
-    )
-
     source_3 = sql_database().with_resources(
         "INVT_OPIssueSaleDetails", "INVT_IPIssueDetails")
     source_3.INVT_OPIssueSaleDetails.apply_hints(
         incremental=dlt.sources.incremental("ModifiedDate"), primary_key="Id")
     source_3.INVT_IPIssueDetails.apply_hints(
         incremental=dlt.sources.incremental("ModifiedDate"), primary_key="Id")
-    pipeline3.run(invoice_table)
     pipeline3.run(source_3, write_disposition="merge")
 
 
 if __name__ == "__main__":
-    # create_master_pipeline()
-    # create_mhea_pipeline()
+    create_master_pipeline()
+    create_mhea_pipeline()
     inventory_master_pipeline()
