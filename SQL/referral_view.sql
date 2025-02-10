@@ -1,5 +1,7 @@
 create materialized view if not exists public.referral_view as
-select
+select distinct on (e.id)
+	-- selecting unique by referral's primary id (e.id)
+	e.id,
 	r.patient_id,
 	e.doctor_name as source_doctor,
 	e.id as source_doctor_id,
@@ -20,6 +22,7 @@ where
 	OR r.facility_id = 34
 	OR r.facility_id = 36
 	OR r.facility_id = 37
+order by e.id, r.entered_date  -- adjust ordering as needed
 WITH
 	NO DATA;
 

@@ -1,5 +1,6 @@
 create materialized view public.encounter_view as
-select
+select distinct on (id)
+	-- selecting unique by encounter_id (id)
 	id as encounter_id,
 	encounter_no,
 	encounter_date,
@@ -17,6 +18,7 @@ where
 	OR facility_id = 34
 	OR facility_id = 36
 	OR facility_id = 37
+order by id, encounter_date  -- adjust ordering as needed
 with
 	no data;
 

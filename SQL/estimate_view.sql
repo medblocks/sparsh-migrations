@@ -1,5 +1,5 @@
 create materialized view if not exists public.estimate_view as
-select
+select distinct on (e.id)
 	e.id as unique_id,
 	e.facilityid as unit_code,
 	e.estimate_no as estimate_code,
@@ -32,6 +32,7 @@ where
 	OR e.facilityid = 34
 	OR e.facilityid = 36
 	OR e.facilityid = 37
+order by e.id, e.entered_date
 with
 	no data;
 

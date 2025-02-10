@@ -1,5 +1,5 @@
 create materialized view public.admission_discharge_view as
-select
+select distinct on (a.id)
 	a.facility_id as unit_id,
 	aod.last_admitting_practitioner_name as admission_consultant_name,
 	aod.specialization as admission_department,
@@ -38,6 +38,7 @@ where
 	OR a.facility_id = 34
 	OR a.facility_id = 36
 	OR a.facility_id = 37
+order by a.id, a.admission_date
 with
 	no data;
 

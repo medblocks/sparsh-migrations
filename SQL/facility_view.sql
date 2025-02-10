@@ -1,4 +1,4 @@
-/*This view only has specific facility for SPARSH only surfaced */ create materialized view public.facility_view as
+create materialized view public.facility_view as
 select
 	id,
 	description,
