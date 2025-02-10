@@ -10,6 +10,7 @@ from
 	mhea_master.am_service_mst
 where
 	enterprise_id = 8
+	OR enterprise_id = 2
 with
 	no data;
 

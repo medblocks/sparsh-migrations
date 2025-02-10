@@ -19,9 +19,12 @@ from
 	left join mhea_replica.bt_encounter e on r.encounter_id = e.id
 where
 	r.facility_id = 32
+	OR r.facility_id = 33
 	OR r.facility_id = 34
 	OR r.facility_id = 36
 	OR r.facility_id = 37
+	OR r.facility_id = 2
+	OR r.facility_id = 4
 order by e.id, r.entered_date  -- adjust ordering as needed
 WITH
 	NO DATA;

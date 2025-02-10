@@ -10,6 +10,7 @@ from
 	inventory_pipeline4.invm_item_master
 where
 	enterprise_id = 8
+	OR enterprise_id = 2
 with
 	no data;
 

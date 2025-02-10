@@ -15,9 +15,12 @@ from
 	mhea_replica.bt_encounter
 where
 	facility_id = 32
+	OR facility_id = 33
 	OR facility_id = 34
 	OR facility_id = 36
 	OR facility_id = 37
+	OR facility_id = 2
+	OR facility_id = 4
 order by id, encounter_date  -- adjust ordering as needed
 with
 	no data;

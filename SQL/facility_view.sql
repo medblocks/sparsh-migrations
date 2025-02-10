@@ -16,6 +16,9 @@ where
 	or id = 34
 	or id = 36
 	or id = 37
+	OR id = 2
+	OR id = 4
+	OR id = 33
 limit
 	10
 with

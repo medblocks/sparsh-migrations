@@ -1,5 +1,6 @@
 create materialized view if not exists public.billing_view as
-select
+select distinct
+	on (i.id) i.id as invoice_id,
 	i.facility_id as unit_id,
 	i.invoice_date as primary_date,
 	i.encounter_type as visit_type,
@@ -36,9 +37,15 @@ from
 	left join inventory_pipeline4.invt_op_issue_sale_details op on op.invoice_id = i.id
 where
 	i.facility_id = 32
+	OR i.facility_id = 33
 	OR i.facility_id = 34
 	OR i.facility_id = 36
 	OR i.facility_id = 37
+	OR i.facility_id = 2
+	OR i.facility_id = 4
+order by
+	i.id,
+	i.invoice_date
 with
 	no data;
 

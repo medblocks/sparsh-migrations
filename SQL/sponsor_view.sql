@@ -9,6 +9,7 @@ from
 	mhea_master.am_company
 where
 	enterprise_id = 8
+	OR enterprise_id = 2
 with
 	no data;
 

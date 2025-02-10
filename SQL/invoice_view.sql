@@ -17,16 +17,20 @@ select
 	i.add_on_discount,
 	i.mou_discount,
 	i.invoicestatusid,
-  v.doctor_id,
-  i.patient_payable_amount
+	v.doctor_id,
+	i.patient_payable_amount
 from
 	mhea_replica.bt_invoice as i
- left join mhea_replica.bt_invoice_patient_visit as v
-on i.id = v.invoice_id
+	left join mhea_replica.bt_invoice_patient_visit as v on i.id = v.invoice_id
 where
 	facility_id = 32
 	OR facility_id = 34
 	OR facility_id = 36
 	OR facility_id = 37
-with no data;
+	OR facility_id = 2
+	OR facility_id = 4
+	OR facility_id = 33
+with
+	no data;
+
 refresh materialized view public.invoice_view;

@@ -1,6 +1,6 @@
 create materialized view if not exists public.estimate_view as
-select distinct on (e.id)
-	e.id as unique_id,
+select distinct
+	on (e.id) e.id as unique_id,
 	e.facilityid as unit_code,
 	e.estimate_no as estimate_code,
 	e.entered_date as created_date,
@@ -29,10 +29,15 @@ from
 	left join mhea_replica.adt_estimate_details as details on details.estimate_id = e.id
 where
 	e.facilityid = 32
+	OR e.facilityid = 33
 	OR e.facilityid = 34
 	OR e.facilityid = 36
 	OR e.facilityid = 37
-order by e.id, e.entered_date
+	OR e.facility_id = 2
+	OR e.facility_id = 4
+order by
+	e.id,
+	e.entered_date
 with
 	no data;
 

@@ -1,6 +1,6 @@
 create materialized view public.admission_discharge_view as
-select distinct on (a.id)
-	a.facility_id as unit_id,
+select distinct
+	on (a.id) a.facility_id as unit_id,
 	aod.last_admitting_practitioner_name as admission_consultant_name,
 	aod.specialization as admission_department,
 	aod.last_admitting_practitioner_name as discharge_consultant_name,
@@ -35,10 +35,15 @@ from
 	left join mhea_replica.adt_discharge dis on a.encounter_id = dis.encounter_id
 where
 	a.facility_id = 32
+	OR a.facility_id = 33
 	OR a.facility_id = 34
 	OR a.facility_id = 36
 	OR a.facility_id = 37
-order by a.id, a.admission_date
+	OR a.facility_id = 2
+	OR a.facility_id = 4
+order by
+	a.id,
+	a.admission_date
 with
 	no data;
 

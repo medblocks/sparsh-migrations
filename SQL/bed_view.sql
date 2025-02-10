@@ -18,9 +18,13 @@ from
 	mhea_replica.am_bed
 where
 	facility_id = 32
+	OR facility_id = 33
 	OR facility_id = 34
 	OR facility_id = 36
 	OR facility_id = 37
+	OR facility_id = 2
+	OR facility_id = 4
 with
 	no data;
+
 refresh materialized view public.bed_view;

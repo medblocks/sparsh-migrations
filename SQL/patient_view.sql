@@ -1,6 +1,6 @@
 CREATE MATERIALIZED VIEW IF NOT EXISTS public.patient_view AS
-SELECT DISTINCT ON (r.id)
-  r.id AS patient_id,
+SELECT DISTINCT
+  ON (r.id) r.id AS patient_id,
   r.registration_date AS registration_date,
   r.registration_no AS mrn,
   r.patient_full_name AS name,
@@ -9,7 +9,7 @@ SELECT DISTINCT ON (r.id)
   r.email AS email,
   r.mobile_no AS mobile_no,
   ra.present_pin_code AS pin,
-  CONCAT(ra.present_street, ' ', ra.present_flat_house_no) AS address,
+  CONCAT (ra.present_street, ' ', ra.present_flat_house_no) AS address,
   rm.present_city as city,
   rm.present_area as district,
   rm.present_country as country
@@ -19,7 +19,10 @@ FROM
   LEFT JOIN mhea_replica.registration_master_data_text rm ON rm.registration_id = r.id
 WHERE
   r.enterprise_id = 8
-ORDER BY r.id, r.registration_date
+  OR r.enterprise_id = 2
+ORDER BY
+  r.id,
+  r.registration_date
 WITH
   NO DATA;
 
