@@ -1,5 +1,7 @@
 create materialized view public.invoice_view as
-select
+select distinct
+	on (i.id)
+	-- selecting unique by invoice id (i.id)
 	i.id,
 	i.active,
 	i.facility_id,
@@ -30,6 +32,9 @@ where
 	OR facility_id = 2
 	OR facility_id = 4
 	OR facility_id = 33
+order by
+	i.id,
+	i.invoice_date -- adjust ordering as needed
 with
 	no data;
 
